@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云五笔 T2 UI 国际标准布局图（房子蓝图）</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#e8e8e8; font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; padding:24px 12px; }
+  .wrap { max-width:480px; margin:0 auto; }
+  h1 { font-size:18px; text-align:center; color:#222; margin-bottom:4px; }
+  .sub { font-size:12px; text-align:center; color:#666; margin-bottom:12px; }
+  /* Tabs */
+  .tabs { display:flex; gap:6px; margin-bottom:14px; }
+  .tab { flex:1; text-align:center; padding:8px 0; font-size:14px; border:2px solid #999; border-radius:8px; background:#fff; color:#333; cursor:pointer; user-select:none; }
+  .tab.on { background:#333; color:#fff; border-color:#333; }
+  .panel { display:none; }
+  .panel.on { display:block; }
+  /* Phone frame */
+  .phone { background:#fff; border:2px solid #333; border-radius:14px; padding:10px; }
+  .statusbar { height:14px; display:flex; justify-content:space-between; font-size:9px; color:#888; padding:0 6px; }
+  .bar { height:30px; background:#f2f2f2; border:1px dashed #aaa; border-radius:6px; margin-bottom:6px; display:flex; align-items:center; padding:0 8px; font-size:10px; color:#888; }
+  .bar .cand { display:flex; gap:8px; font-size:12px; color:#333; margin-left:8px; }
+  .kb { border:1.5px solid #333; border-radius:8px; padding:6px; background:#e0e0e0; }
+  .row { display:flex; gap:4px; margin-bottom:4px; }
+  .row:last-child { margin-bottom:0; }
+  .key { position:relative; height:44px; flex:1; background:#fff; border:1.5px solid #333; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; color:#222; }
+  .key .upper { position:absolute; top:2px; left:50%; transform:translateX(-50%); font-size:10px; font-weight:400; color:#888; }
+  .key.fn { background:#ccc; border-radius:6px; font-size:12px; font-weight:600; }
+  .key.fn.sq { flex:1.4; }
+  .key.space { flex:4.4; background:#fff; }
+  .key.enter { background:#ccc; }
+  .key.mic { background:#ccc; }
+  /* dimension labels */
+  .dim { position:relative; height:16px; margin:2px 0; }
+  .dim span { position:absolute; left:50%; transform:translateX(-50%); font-size:9px; color:#c00; background:#fff; padding:0 4px; border:1px solid #c00; border-radius:3px; white-space:nowrap; }
+  /* align lines */
+  .align { position:relative; }
+  .align::before, .align::after { content:""; position:absolute; top:-4px; bottom:-4px; width:0; border-left:1.5px dashed #07c; z-index:2; pointer-events:none; }
+  .align::before { left:0; }
+  .align::after { right:0; }
+  /* spec table */
+  .spec { margin-top:14px; border:1.5px solid #333; border-radius:8px; overflow:hidden; }
+  .spec h2 { font-size:13px; background:#333; color:#fff; padding:6px 10px; }
+  table { width:100%; border-collapse:collapse; background:#fff; font-size:12px; }
+  th,td { border:1px solid #ccc; padding:5px 8px; text-align:left; }
+  th { background:#f2f2f2; }
+  .note { font-size:11px; color:#c00; margin-top:8px; text-align:center; }
+  /* num panel */
+  .numkey { height:52px; background:#fff; border:1.5px solid #333; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; }
+  .numkey.sym { font-size:14px; font-weight:400; }
+  .numkey.fn { background:#ccc; font-size:12px; }
+  /* sym panel */
+  .symgrid { display:grid; grid-template-columns:repeat(8,1fr); gap:4px; }
+  .symkey { height:38px; background:#fff; border:1.5px solid #333; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+  .symkey.fn { background:#ccc; }
+  /* clip panel */
+  .clip { border:1.5px solid #333; border-radius:8px; background:#fff; overflow:hidden; }
+  .cliphead { display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:#f2f2f2; border-bottom:1px solid #ccc; font-size:13px; }
+  .clipitem { padding:12px 10px; border-bottom:1px solid #eee; font-size:14px; color:#222; display:flex; justify-content:space-between; align-items:center; }
+  .clipitem .del { color:#999; font-size:11px; }
+  .cliptip { font-size:11px; color:#999; padding:6px 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>云五笔 T2 · UI 国际标准布局图</h1>
+  <div class="sub">房子蓝图（布局）→ 确认后装修（风格）→ 功能配套 | 豆包出品 · 供三方验收</div>
+
+  <div class="tabs">
+    <div class="tab on" data-p="p1">中文面板</div>
+    <div class="tab" data-p="p2">数字面板</div>
+    <div class="tab" data-p="p3">符号面板</div>
+    <div class="tab" data-p="p4">剪贴板</div>
+  </div>
+
+  <!-- ============ 中文面板 ============ -->
+  <div class="panel on" id="p1">
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>输入法测试</span></div>
+      <div class="bar">五笔<span class="cand">一笔 五笔 我们 科技创新</span></div>
+      <div class="dim"><span>▼ 提示栏高 30px（有字/无字恒定）</span></div>
+      <div class="kb">
+        <div class="row align">
+          <div class="key"><span class="upper">1</span>Q</div>
+          <div class="key"><span class="upper">2</span>W</div>
+          <div class="key"><span class="upper">3</span>E</div>
+          <div class="key"><span class="upper">4</span>R</div>
+          <div class="key"><span class="upper">5</span>T</div>
+          <div class="key"><span class="upper">6</span>Y</div>
+          <div class="key"><span class="upper">7</span>U</div>
+          <div class="key"><span class="upper">8</span>I</div>
+          <div class="key"><span class="upper">9</span>O</div>
+          <div class="key"><span class="upper">0</span>P</div>
+        </div>
+        <div class="row">
+          <div class="key"><span class="upper">;</span>A</div>
+          <div class="key"><span class="upper">'</span>S</div>
+          <div class="key"><span class="upper">,</span>D</div>
+          <div class="key"><span class="upper">.</span>F</div>
+          <div class="key"><span class="upper">/</span>G</div>
+          <div class="key"><span class="upper">[</span>H</div>
+          <div class="key"><span class="upper">]</span>J</div>
+          <div class="key"><span class="upper">(</span>K</div>
+          <div class="key"><span class="upper">)</span>L</div>
+          <div class="key fn">：</div>
+        </div>
+        <div class="row">
+          <div class="key fn sq">Shift</div>
+          <div class="key">Z</div>
+          <div class="key">X</div>
+          <div class="key">C</div>
+          <div class="key">V</div>
+          <div class="key">B</div>
+          <div class="key">N</div>
+          <div class="key">M</div>
+          <div class="key fn sq">⌫ 退格</div>
+        </div>
+        <div class="row">
+          <div class="key fn">123</div>
+          <div class="key fn">中/英</div>
+          <div class="key fn">符号</div>
+          <div class="key space">空格</div>
+          <div class="key fn mic">🎤</div>
+          <div class="key fn enter">⏎ 回车</div>
+        </div>
+      </div>
+      <div class="dim"><span>▲ 键盘总高恒定 H（四面板一致，无闪动）</span></div>
+    </div>
+    <div class="note">标注：字母键 44px 高统一 · 功能键(Shift/退格)正方形 · 空格长条 · 大写字母显示 · 上档符号在字母上方 3px 居中 · 左右对齐（Q 左 / P 右）</div>
+  </div>
+
+  <!-- ============ 数字面板 ============ -->
+  <div class="panel" id="p2">
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>数字面板</span></div>
+      <div class="bar">提示栏（高度同中文面板）</div>
+      <div class="kb">
+        <div class="row">
+          <div class="numkey">1</div><div class="numkey">2</div><div class="numkey">3</div>
+          <div class="numkey sym">－</div><div class="numkey fn">⌫</div>
+        </div>
+        <div class="row">
+          <div class="numkey">4</div><div class="numkey">5</div><div class="numkey">6</div>
+          <div class="numkey sym">＋</div><div class="numkey fn">清空</div>
+        </div>
+        <div class="row">
+          <div class="numkey">7</div><div class="numkey">8</div><div class="numkey">9</div>
+          <div class="numkey sym">．</div><div class="numkey fn">锁定</div>
+        </div>
+        <div class="row">
+          <div class="numkey fn">#+=</div><div class="numkey">0</div><div class="numkey sym">，</div>
+          <div class="numkey sym">？</div><div class="numkey fn enter">⏎</div>
+        </div>
+      </div>
+      <div class="dim"><span>▲ 键盘总高 = 中文面板（四面板一致）</span></div>
+    </div>
+    <div class="note">数字面板：3 行数字 + 符号列 + 功能键列，总高与中文面板严格一致</div>
+  </div>
+
+  <!-- ============ 符号面板 ============ -->
+  <div class="panel" id="p3">
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>符号面板</span></div>
+      <div class="bar">提示栏（高度同中文面板）</div>
+      <div class="kb">
+        <div class="symgrid">
+          <div class="symkey">，</div><div class="symkey">。</div><div class="symkey">、</div><div class="symkey">？</div>
+          <div class="symkey">！</div><div class="symkey">：</div><div class="symkey">；</div><div class="symkey fn">⌫</div>
+          <div class="symkey">“</div><div class="symkey">”</div><div class="symkey">‘</div><div class="symkey">’</div>
+          <div class="symkey">（</div><div class="symkey">）</div><div class="symkey">【</div><div class="symkey">】</div>
+          <div class="symkey">—</div><div class="symkey">…</div><div class="symkey">·</div><div class="symkey">～</div>
+          <div class="symkey">＝</div><div class="symkey">＋</div><div class="symkey">－</div><div class="symkey">×</div>
+          <div class="symkey">÷</div><div class="symkey">％</div><div class="symkey">￥</div><div class="symkey">＄</div>
+          <div class="symkey fn">分类▲</div><div class="symkey fn">分类▼</div><div class="symkey fn">锁定</div><div class="symkey fn">⏎</div>
+        </div>
+      </div>
+      <div class="dim"><span>▲ 符号面板：8 列网格，分类可翻页（平滑拖动），总高一致</span></div>
+    </div>
+    <div class="note">符号分类：常用 / 标点 / 数学 / 货币…（多页，上下平滑拖动翻查）</div>
+  </div>
+
+  <!-- ============ 剪贴板 ============ -->
+  <div class="panel" id="p4">
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span>剪贴板</span></div>
+      <div class="bar">提示栏（高度同中文面板）</div>
+      <div class="clip">
+        <div class="cliphead"><span>剪贴板历史</span><span style="color:#c00;font-size:11px;">长按可删除</span></div>
+        <div class="clipitem"><span>中华人民共和国成立七十周年</span><span class="del">✕</span></div>
+        <div class="clipitem"><span>山重水复疑无路，柳暗花明又一村</span><span class="del">✕</span></div>
+        <div class="clipitem"><span>https://github.com/zsdili/cloudwubi-bridge</span><span class="del">✕</span></div>
+        <div class="clipitem"><span>床前明月光，疑是地上霜</span><span class="del">✕</span></div>
+        <div class="clipitem"><span>我们 科技创新 人民</span><span class="del">✕</span></div>
+        <div class="cliptip">内容满行显示、左右留白 · 字号与主界面统一 · 可上下滑动翻查</div>
+      </div>
+      <div class="dim"><span>▲ 剪贴板面板总高与键盘面板一致</span></div>
+    </div>
+    <div class="note">剪贴板：满行显示、左右留白、字号统一 14pt、长按条目可删除、上下滑动翻查</div>
+  </div>
+
+  <!-- ============ 布局规范 ============ -->
+  <div class="spec">
+    <h2>布局统一规范（DesignTokens · 房子标准）</h2>
+    <table>
+      <tr><th>规范项</th><th>标准值</th></tr>
+      <tr><td>字母键高</td><td>44px 统一（四面板一致）</td></tr>
+      <tr><td>功能键</td><td>正方形（Shift/退格/123/中英/符号/语音/回车）</td></tr>
+      <tr><td>空格</td><td>长条形（宽 = 4.4 倍字母键）</td></tr>
+      <tr><td>面板总高</td><td>四面板严格一致（提示栏 30px + 键盘区 200px，无闪动）</td></tr>
+      <tr><td>上档符号</td><td>标点/数字在字母上方 3px 居中显示</td></tr>
+      <tr><td>对齐</td><td>左对齐 Q 键、右对齐 P 键；底行功能区不超 Q-P 边界</td></tr>
+      <tr><td>字母显示</td><td>大写（Q W E R…）</td></tr>
+      <tr><td>字根标注</td><td>按 86 版五笔键位（后续风格阶段加入，布局阶段仅留位）</td></tr>
+      <tr><td>功能键位</td><td>中文面板底行：123 / 中英 / 符号 / 空格 / 语音🎤 / 回车</td></tr>
+    </table>
+  </div>
+
+  <div class="note">本图为"房子"蓝图（布局验收）→ 确认后进入风格（装修：色板/字型/圆角）→ 功能配套（语音/词频等）</div>
+</div>
+
+<script>
+  (function(){
+    var tabs = document.querySelectorAll('.tab');
+    tabs.forEach(function(t){
+      t.addEventListener('click', function(){
+        tabs.forEach(function(x){ x.classList.remove('on'); });
+        document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+        t.classList.add('on');
+        document.getElementById(t.getAttribute('data-p')).classList.add('on');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

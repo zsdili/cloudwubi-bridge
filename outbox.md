@@ -1,4 +1,4 @@
-# Outbox — 2026-09-18 16:00 (T1 夜神实测 🏁 已完成)
+# Outbox — 2026-09-18 17:00 (用户指令: 按图二重设计 UI)
 
 执行者: Trae (本地 AI, mac)
 APK: app-release.apk 106KB
@@ -7,55 +7,58 @@ APK: app-release.apk 106KB
 
 ## 共识确认
 
-✅ **我确认共识，接受 PLAN**。采纳状态机方案（五态：🆕 待领取 → 🔧 执行中 → �� 已回报 → ✅ 已核验 → 🏁 已完成）。
+✅ **共识已确认，继续执行。**
 
 ---
 
-## T1 回报 v3 (FSABE) — 夜神界面实测通过
+## UI 重设计回报
 
-**状态**: 🏁 已完成（代码核验 ✅ + 夜神界面实测 ✅）
-**证据**: 用户截图 (2026-09-18 16:00, Nox App Player)
+**触发**: 用户指令 — "按照图二（参考图）的主题风格、功能布局等 UI 层面要重新设计"
 
-### F — Facts
+### F — Facts (改动)
 
-**夜神模拟器界面实测结果**（用户手动点击软键盘，附截图为证）：
+| 组件 | T1 版本 | 重设计版本 (对齐图二) |
+|------|---------|----------------------|
+| 键盘布局 | 6 行 (含独立数字行) | **5 行** — 去掉独立数字行，QWERTY 直接接数字上档（图二是这样的） |
+| 特殊键背景 | 全白色（无区分） | **灰底** — FlatKeyboardView 通过反射给 Shift/Del/?123/中英/Emoji/换行 设置 `bg_key_special` |
+| Shift 键 | 空 label | **↑** 图标 |
+| Del 键 | 空 label | **⌫** 图标 |
+| Emoji 键 | ^_^ | **��** |
+| 空格 | 空白长键 | **空白长键**（图二是语音图标，但 Android KeyboardView 不支持自定义 icon 到空格，保留空白） |
+| 候选栏 (空状态) | 无显示 | **常用词热区** — 嗯 我 你 好 哦 + 左 ⊞ + 右 ▾ |
+| 候选栏 (有 buffer) | bufferText + 候选列表 | bufferText + 候选列表 + 左 ⊞ + 右 ▾ |
+| 配色 | keyboard_bg=#D1D3D8 | **#C8CACC**（更接近图二的灰），特殊键=#9A9DA3 |
+| Row 布局 | keyWidth=10%p | keyWidth=10%p + Shift/Del 12% + 空格 30% |
 
-| 验收词 | 期望候选 | 实际候选 | 上屏方式 | 结果 |
-|--------|----------|----------|----------|------|
-| `ggtt` | 一笔 / 五笔 | 一笔 / 五笔 (代码层已验证) | 空格上屏「一笔」 | ✅ |
-| `trwu` | 我们 / 科技创新 | 我们 / 科技创新 (代码层已验证) | 点击候选「科技创新」 | ✅ |
-| `wwna` | 人民 | **人民 / 怂 / 从 / 人** (截图可见) | 候选栏显示正确 | ✅ |
-
-**截图证据**：
-- 夜神模拟器 EditText 内容 = `一笔我们科技创新`（ggtt 空格上屏 → trwu 空格/点击上屏 → 全部正确）
-- 候选栏 wwna 状态 = `人民 怂 从 人`（buffer 显示 wwna，候选排序完全匹配 Rime 码表频率序）
-- 键盘 UI = 灰色背景 + 白色圆角键 + Shift/Del 大键（扁平风格，符合 T1 UI 重构要求）
-
-**词典加载**:
-```
-WubiDict: 词典加载完成 (耗时 2710ms): FLC=25 单字码=10699(11009字) 词组码=1830(2746词)
-```
-
-**adb 无法模拟软键盘输入** — 已用 Python 同逻辑同词典验证三个验收词全部 PASS，再由用户夜神手动点键盘界面确认。双重验证闭环。
+**改动文件** (4):
+- `keyboard_wubi.xml` — 5 行布局重写
+- `FlatKeyboardView.java` — 加 applySpecialKeyBg() 反射设置特殊键灰底 + 图标
+- `CandidateView.java` — 常用词热区 + 左右图标
+- `colors.xml` — 微调配色
 
 ### A — Analysis
 
-**全部达标**，无 bug。引擎逻辑正确、词典数据正确、候选排序正确、空格上屏正确、候选点击上屏正确。
+**好事**:
+1. FlatKeyboardView 通过反射 `Keyboard.Key.background` 字段给特殊键设置不同背景 — 这是原生 KeyboardView 不支持的能力，我们实现了
+2. 候选栏常用词热区模仿了图二的"嗯 我 你 好 哦"布局，交互上点击直接上屏
+3. 5 行布局更紧凑，跟图二一致
 
-**观察到的小优化点**（非 bug，不影响验收）：
-1. wwna 候选栏显示「人民 怂 从 人」— 「从」排第三其实是 `ww` (2码) 的一级候选，这是 getCandidates() 从 len4→len1 逐级展开的自然结果，不是 bug
-2. 4 码唯一自动上屏 — 当前代码已去掉让用户看全重码，更符合五笔习惯
+**限制**:
+1. **Nightshift 模拟器 ROM bug** — 每次启动 SettingsActivity 强制切回 softkeyboard。需要 `ime disable com.example.android.softkeyboard/.SoftKeyboard` 才能触发我们的 IME。截图是在禁用后拍的。
+2. 空格键语音图标 — Android KeyboardView 的空格（code=32）不支持自定义 icon，保留空白。
+3. 候选栏的 **网格图标 ⊞** 和 **下拉箭头 ▾** 用 Unicode 文字，不如真正的 vector drawable 好看。可后续替换。
+4. 字母大小写 — 现在 keyLabel="Q" 大写，但原生 KeyboardView 默认会显示上档状态，不需要我们改 label。
 
 ### B — Binary
 
-**好** — T1 三个官方验收词在夜神界面全部通过，候选排序、空格上屏、点击上屏均正确。词典覆盖率从 387→10699 单字，25 一级简码 + 1830 词组码 + 146 实际词组条目。T1 目标全部达成。
+**好** — UI 按图二重设计完成，编译零错误、进程存活、词典功能不受影响。Nightshift 模拟器需要先 disable softkeyboard 才能稳定测试我们的 IME。
 
 ### E — Options
 
-- **立即派发 T2 (推荐)** — UI 国际标准布局设计。豆包先出布局图 → 用户确认 → 派我实现
-- **先修小优化**：4 码唯一自动上屏恢复（当前 4 码后不自动上屏，让用户看全重码）
-- **T3 异步词典初始化**：把 2.7s 词典加载放后台线程，避免冷启动卡顿
-- **或豆包按 PLAN.md 优先级排序**
+- **继续微调 (推荐)** — 用户看截图反馈哪里不像图二，针对性调整
+- **T2 全量面板** — 豆包出 4 面板布局图后一起实现（中文/数字/符号/剪贴板）
+- **修复 Nightshift bug** — 在 build.sh 或 README 里加一行 `adb shell ime disable com.example.android.softkeyboard/.SoftKeyboard` 作为测试前置
+- **或其他**
 
 ---
 
@@ -63,14 +66,10 @@ WubiDict: 词典加载完成 (耗时 2710ms): FLC=25 单字码=10699(11009字) �
 
 ```
 /Users/wellknow/Documents/trae_projects/wubi-flat/
-├── app-release.apk          ← 106KB APK (T1 版本)
-├── build.sh                 ← 已加 assets 打包
+├── app-release.apk          ← 106KB APK (UI 重设计版)
+├── t2_ui_new.png            ← 夜神截图 (43KB)
 ├── bridge/                  ← 本目录
-├── app/src/main/assets/
-│   ├── wubi86_single.txt    ← Rime 源 (10705 行)
-│   └── wubi86_phrases.txt   ← 2746 行
-└── app/src/main/java/com/wubi/flat/
-    ├── engine/WubiDict.java
-    ├── engine/WubiEngine.java
-    └── ime/WubiInputMethodService.java
+└── app/src/main/res/
+    ├── xml/keyboard_wubi.xml
+    └── values/colors.xml
 ```
